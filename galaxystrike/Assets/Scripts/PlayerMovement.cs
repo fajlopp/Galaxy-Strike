@@ -1,9 +1,12 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
 
     [SerializeField] float controlSpeed = 10f;
+    [SerializeField] float xClampRange = 13f;
+    [SerializeField] float yClampRange = 10f;
     Vector2 movement;
 
     void Update()
@@ -19,9 +22,13 @@ public class PlayerMovement : MonoBehaviour
     private void ProcessTranslation()
     {
         float xOffset = movement.x * controlSpeed * Time.deltaTime;
+        float rawXpos = transform.localPosition.x + xOffset;
+        float clampedXPos = Mathf.Clamp(rawXpos, -xClampRange, xClampRange);
 
         float yOffset = movement.y * controlSpeed * Time.deltaTime;
+        float rawYpos = transform.localPosition.y + yOffset;
+        float clampedYPos = Mathf.Clamp(rawYpos, -yClampRange, yClampRange);
 
-        transform.localPosition = new Vector3(transform.localPosition.x + xOffset, transform.localPosition.y + yOffset, 0f);
+        transform.localPosition = new Vector3(clampedXPos, clampedYPos, 0f);
     }
 }
